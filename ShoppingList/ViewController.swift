@@ -8,11 +8,43 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UITableViewController {
+    var items = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Clear", style: .plain, target: self, action: #selector(clearList))
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return items.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Item", for: indexPath)
+        cell.textLabel?.text = items[indexPath.row]
+        return cell
+    }
+    
+    @objc func addItem() {
+        let ac = UIAlertController(title: "Add Item", message: nil, preferredStyle: .alert)
+        ac.addTextField()
+        
+        let addItem = UIAlertAction(title: "Add", style: .default) { [weak self, weak ac] action in
+            guard let item = ac?.textFields?[0].text else { return }
+            self?.items.append(item)
+            self?.tableView.reloadData()
+        }
+        
+        ac.addAction(addItem)
+        present(ac, animated: true)
+    }
+    
+    @objc func clearList() {
+        self.items.removeAll()
+        self.tableView.reloadData()
     }
 
 

@@ -14,6 +14,7 @@ class ViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        title = "List"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem))
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Clear", style: .plain, target: self, action: #selector(clearList))
     }
@@ -34,8 +35,9 @@ class ViewController: UITableViewController {
         
         let addItem = UIAlertAction(title: "Add", style: .default) { [weak self, weak ac] action in
             guard let item = ac?.textFields?[0].text else { return }
-            self?.items.append(item)
-            self?.tableView.reloadData()
+            let indexPath = IndexPath(row: 0, section: 0)
+            self?.items.insert(item, at: 0)
+            self?.tableView.insertRows(at: [indexPath], with: .automatic)
         }
         
         ac.addAction(addItem)
